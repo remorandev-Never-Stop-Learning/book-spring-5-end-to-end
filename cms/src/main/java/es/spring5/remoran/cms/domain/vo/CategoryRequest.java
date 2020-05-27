@@ -1,4 +1,4 @@
-package es.spring5.remoran.cms.domain.resources;
+package es.spring5.remoran.cms.domain.vo;
 
 import lombok.Data;
 
