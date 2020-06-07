@@ -1,6 +1,7 @@
 package es.spring5.remoran.cms.domain.resources;
 
 import es.spring5.remoran.cms.domain.model.Category;
+import es.spring5.remoran.cms.domain.service.CategoryService;
 import es.spring5.remoran.cms.domain.vo.CategoryRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +19,12 @@ import java.util.List;
 @Api(tags = "category", description = "Catagory API")
 public class CategoryResource {
 
+    private final CategoryService categoryService;
+
+    public CategoryResource(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
     @GetMapping("/{id}")
     @ApiOperation(value = "Find category",  notes = "Find the Category by ID")
     @ApiResponses(value = {
@@ -25,7 +32,7 @@ public class CategoryResource {
             @ApiResponse(code = 400, message = "Category not found")
     })
     public ResponseEntity<Category> findOne(@PathVariable("id") String id) {
-        return ResponseEntity.ok(new Category());
+        return ResponseEntity.ok(this.categoryService.findOne(id));
     }
 
     @GetMapping
@@ -35,7 +42,7 @@ public class CategoryResource {
             @ApiResponse(code = 400, message = "Categories not found")
     })
     public ResponseEntity<List<Category>> findAll() {
-        return ResponseEntity.ok(Arrays.asList(new Category(), new Category()));
+        return ResponseEntity.ok(this.categoryService.findAll());
     }
 
     @PostMapping
@@ -44,8 +51,8 @@ public class CategoryResource {
             @ApiResponse(code = 200, message = "Category created successfully"),
             @ApiResponse(code = 400, message = "Invalid request")
     })
-    public ResponseEntity<Category> newCategory(CategoryRequest category) {
-        return new ResponseEntity<>(new Category(), HttpStatus.CREATED);
+    public ResponseEntity<Category> newCategory(@RequestBody CategoryRequest category) {
+        return new ResponseEntity<>(this.categoryService.create(category), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
@@ -56,7 +63,7 @@ public class CategoryResource {
             @ApiResponse(code = 404, message = "Category not found")
     })
     public void removeCategory (@PathVariable("id") String id) {
-
+        this.categoryService.delete(id);
     }
 
     @PutMapping("/{id}")
@@ -66,7 +73,7 @@ public class CategoryResource {
             @ApiResponse(code = 404, message = "Category not found"),
             @ApiResponse(code = 400, message = "Invalid request")
     })
-    public ResponseEntity<Category> updateCategory(@PathVariable("id") String id, CategoryRequest categoryRequest){
+    public ResponseEntity<Category> updateCategory(@PathVariable("id") String id, @RequestBody CategoryRequest categoryRequest){
         return new ResponseEntity<>(new Category(), HttpStatus.OK);
     }
 }
