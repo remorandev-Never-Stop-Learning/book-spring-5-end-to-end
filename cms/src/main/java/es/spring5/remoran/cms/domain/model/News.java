@@ -1,19 +1,39 @@
 package es.spring5.remoran.cms.domain.model;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@Entity
+@Table(name = "news")
 public class News {
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     String id;
+
     String title;
+
     String content;
+
+    @ManyToOne
     User author;
+
+    @OneToMany
     Set<User> mandatoryReviewers;
-    Set<Review> reviewers;
-    Set<Category> categories;
-    Set<Tag> tags;
+
+    @ElementCollection
+    Set<Review> reviewers = new HashSet<>();
+
+    @OneToMany
+    Set<Category> categories = new HashSet<>();
+
+    @ElementCollection
+    Set<Tag> tags =  new HashSet<>();
 
     public Review review(String userId, String status) {
         final Review review = new Review(userId, status);
@@ -21,8 +41,8 @@ public class News {
         return review;
     }
 
-    public Boolean revised(){
+    public Boolean revised() {
         return this.mandatoryReviewers.stream().allMatch(reviewer -> this.reviewers.stream()
-        .anyMatch(review -> reviewer.id.equals(review.userId) && "approved".equals(review.status)));
+                .anyMatch(review -> reviewer.id.equals(review.userId) && "approved".equals(review.status)));
     }
 }
