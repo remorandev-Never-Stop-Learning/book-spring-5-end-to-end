@@ -17,7 +17,7 @@ public class UserService {
     }
 
     public User update(String id, UserRequest userRequest) {
-        final User user = this.userRepository.findOne(id);
+        final User user = this.userRepository.findById(id).get();
         user.setIdentity(userRequest.getIdentity());
         user.setName(userRequest.getName());
         user.setRole(userRequest.getRole());
@@ -34,7 +34,7 @@ public class UserService {
     }
 
     public void delete(String id) {
-        final User user = this.userRepository.findOne(id);
+        final User user = this.userRepository.findById(id).get();
         this.userRepository.delete(user);
     }
 
@@ -43,6 +43,6 @@ public class UserService {
     }
 
     public User findOne(String id){
-        return this.userRepository.findOne(id);
+        return this.userRepository.findById(id).get();
     }
 }

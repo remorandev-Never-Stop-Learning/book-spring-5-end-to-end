@@ -1,38 +1,28 @@
 package es.spring5.remoran.cms.domain.model;
 
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@Entity
-@Table(name = "news")
 public class News {
-    @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+
     String id;
 
     String title;
 
     String content;
 
-    @ManyToOne
     User author;
 
-    @OneToMany
     Set<User> mandatoryReviewers;
 
-    @ElementCollection
     Set<Review> reviewers = new HashSet<>();
 
-    @OneToMany
     Set<Category> categories = new HashSet<>();
 
-    @ElementCollection
     Set<Tag> tags =  new HashSet<>();
 
     public Review review(String userId, String status) {
