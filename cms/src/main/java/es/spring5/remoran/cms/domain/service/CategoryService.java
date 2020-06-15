@@ -1,14 +1,12 @@
 package es.spring5.remoran.cms.domain.service;
 
-import es.spring5.remoran.cms.domain.exception.CategoryNotFoundException;
 import es.spring5.remoran.cms.domain.model.Category;
 import es.spring5.remoran.cms.domain.repository.CategoryRepository;
 import es.spring5.remoran.cms.domain.vo.CategoryRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 @Transactional(readOnly = true)
@@ -20,12 +18,12 @@ public class CategoryService {
     }
 
     @Transactional
-    public Category update(Category category) {
+    public Mono<Category> update(Category category) {
         return this.categoryRepository.save(category);
     }
 
     @Transactional
-    public Category create(CategoryRequest request) {
+    public Mono<Category> create(CategoryRequest request) {
         Category category = new Category();
         category.setName(request.getName());
         return this.categoryRepository.save(category);
@@ -33,20 +31,14 @@ public class CategoryService {
 
     @Transactional
     public void delete(String id) {
-        final Optional<Category> categoryOpt = this.categoryRepository.findById(id);
-        categoryOpt.ifPresent(this.categoryRepository::delete);
+        this.categoryRepository.deleteById(id);
     }
 
-    public List<Category> findAll() {
+    public Flux<Category> findAll() {
         return this.categoryRepository.findAll();
     }
 
-    public Category findOne(String id) {
-        Optional<Category> category = this.categoryRepository.findById(id);
-        if (category.isPresent()) {
-            return category.get();
-        } else {
-            throw new CategoryNotFoundException(id);
-        }
+    public Mono<Category> findOne(String id) {
+        return this.categoryRepository.findById(id);
     }
 }
