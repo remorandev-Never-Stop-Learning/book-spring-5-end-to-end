@@ -1,4 +1,4 @@
-package es.spring5.remoran.tweetertracked
+package es.spring5.remoran.twittertracked
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
