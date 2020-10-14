@@ -5,7 +5,7 @@ import es.spring5.remoran.twittergathering.infra.twitter.EncodeUtils.computeSign
 import org.springframework.util.StringUtils
 import java.util.*
 
-class Twitter {
+object Twitter {
     private val SIGNATURE_METHOD = "HMAC-SHA1"
 
     private val AUTHORIZATION_VERIFY_CREDENTIALS = "OAuth " +
